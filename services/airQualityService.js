@@ -15,3 +15,10 @@ export const getAirQuality = async (lat, lon) => {
   const response = await axios.get(url);
   return response.data;
 };
+
+// Get historical air quality (last N days)
+export const getHistoricalAirQuality = async (lat, lon, start, end) => {
+  const url = `${BASE_URL}/air_pollution/history?lat=${lat}&lon=${lon}&start=${start}&end=${end}&appid=${API_KEY}`;
+  const response = await axios.get(url);
+  return response.data;
+};
