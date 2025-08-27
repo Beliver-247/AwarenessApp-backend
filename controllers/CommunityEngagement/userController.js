@@ -1,7 +1,15 @@
 // src/controllers/userController.js
 
 const User = require('../../models/CommunityEngagement/User');
-const asyncHandler = require('express-async-handler'); // Helper for handling async errors
+const asyncHandler = require('express-async-handler');
+const jwt = require('jsonwebtoken'); // Import the jsonwebtoken library
+
+// Helper function to generate a JWT
+const generateToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
+    expiresIn: '30d', // The token will expire in 30 days
+  });
+};
 
 // @desc    Register a new user
 // @route   POST /api/users/register
@@ -27,6 +35,7 @@ const registerUser = asyncHandler(async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      token: generateToken(user._id), // Generate and send the token
     });
   } else {
     res.status(400);
@@ -34,12 +43,35 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Authenticate a user & get token
+// @route   POST /api/users/login
+// @access  Public
+const authUser = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+
+  // Find the user by email
+  const user = await User.findOne({ email });
+
+  // In a real app, you would compare the hashed password
+  if (user && user.password === password) {
+    res.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      token: generateToken(user._id),
+    });
+  } else {
+    res.status(401);
+    throw new Error('Invalid email or password');
+  }
+});
+
 // @desc    Get user profile
 // @route   GET /api/users/:id
-// @access  Private (requires authentication)
+// @access  Private
 const getUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id)
-    .select('-password') // Don't return the password
+    .select('-password')
     .populate('joinedEvents')
     .populate('joinedChallenges')
     .populate('volunteeredFor')
@@ -62,10 +94,8 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   if (user) {
     user.name = req.body.name || user.name;
     user.email = req.body.email || user.email;
-
-    // Only update password if it's provided in the request
     if (req.body.password) {
-      user.password = req.body.password; // In a real app, hash the new password
+      user.password = req.body.password;
     }
 
     const updatedUser = await user.save();
@@ -84,6 +114,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 
 module.exports = {
   registerUser,
+  authUser,
   getUserProfile,
   updateUserProfile,
 };

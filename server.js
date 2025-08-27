@@ -5,6 +5,10 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./config/dbConfig');
 const userRoutes = require('./Routes/CommunityEngagement/userRoutes');
+const eventRoutes = require('./Routes/CommunityEngagement/eventRoutes');  
+const challangeRoutes = require('./Routes/CommunityEngagement/challengeRoutes');  
+const volunteerRoutes = require('./Routes/CommunityEngagement/volunteerRoutes');  
+const achievementRoutes = require('./Routes/CommunityEngagement/achievementRoutes');  
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 
 // Load environment variables from .env file
@@ -21,6 +25,10 @@ app.use(cors()); // Enables Cross-Origin Resource Sharing
 
 // API Routes
 app.use('/api/users', userRoutes);
+app.use('/api/events', eventRoutes);
+app.use('/api/challenges', challangeRoutes);
+app.use('/api/volunteers', volunteerRoutes);
+app.use('/api/achievements', achievementRoutes);
 
 // Basic route for testing
 app.get('/', (req, res) => {
