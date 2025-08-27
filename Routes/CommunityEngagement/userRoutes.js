@@ -4,13 +4,15 @@ const express = require('express');
 const router = express.Router();
 const {
   registerUser,
+  authUser,
   getUserProfile,
   updateUserProfile,
 } = require('../../controllers/CommunityEngagement/userController');
-const { protect } = require('../../middleware/authMiddleware'); // Assuming you have an authentication middleware
+const { protect } = require('../../middleware/authMiddleware');
 
 router.post('/register', registerUser);
-router.get('/:id', protect, getUserProfile); // Using a placeholder for the user ID
+router.post('/login', authUser);
+router.get('/:id', protect, getUserProfile);
 router.put('/:id', protect, updateUserProfile);
 
 module.exports = router;
