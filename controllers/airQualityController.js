@@ -1,4 +1,5 @@
 import { getCoordinates, getAirQuality, getHistoricalAirQuality } from "../services/airQualityService.js";
+import AQIPredictor from "../services/aqiPredictor.js";
 
 
 export const fetchAirQuality = async (req, res) => {
@@ -75,4 +76,38 @@ export const fetchHistoricalAirQuality = async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch historical air quality" });
   }
+};
+
+// Create predictor instance
+const predictor = new AQIPredictor();
+
+export const predictAirQuality = async (req, res) => {
+    try {
+        const { city = 'Colombo', days = 5 } = req.query;
+
+        if (!city) {
+            return res.status(400).json({
+                success: false,
+                error: 'City parameter is required'
+            });
+        }
+
+        console.log(`Making prediction for city: ${city}, days: ${days}`);
+
+        const predictionData = await predictor.getPredictions(city, parseInt(days));
+
+        res.json({
+            success: true,
+            data: predictionData,
+            message: 'AQI predictions generated successfully'
+        });
+
+    } catch (error) {
+        console.error('Prediction API error:', error);
+        res.status(500).json({
+            success: false,
+            error: error.message || 'Failed to generate predictions'
+        });
+    }
+
 };

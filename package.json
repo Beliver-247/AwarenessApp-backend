@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/Beliver-247/AwarenessApp-backend#readme",
   "dependencies": {
+    "@tensorflow/tfjs": "^4.22.0",
     "axios": "^1.11.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
