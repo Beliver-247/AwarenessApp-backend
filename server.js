@@ -3,9 +3,13 @@ import cors from "cors"; // Import cors
 import airQualityRoutes from "./Routes/airQualityRoutes.js";
 import carbonFootprintRoutes from "./Routes/carbonFootprintRoutes.js";
 import dotenv from "dotenv";
+import { connectDB } from "./config/db.js";
 
 dotenv.config();
 const app = express();
+
+// Connect to MongoDB
+connectDB();
 
 // CORS middleware - add this before your routes
 app.use(cors({
