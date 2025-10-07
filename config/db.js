@@ -1,19 +1,17 @@
-// MongoDB connection setup for AwarenessApp-backend
-import mongoose from "mongoose";
-import dotenv from "dotenv";
-dotenv.config();
+const mongoose = require('mongoose');
 
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/awareness-app";
-
-export const connectDB = async () => {
+const connectDB = async () => {
   try {
-    await mongoose.connect(MONGODB_URI, {
+    const conn = await mongoose.connect(process.env.COM_MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    console.log("MongoDB connected");
-  } catch (err) {
-    console.error("MongoDB connection error:", err);
+
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
+  } catch (error) {
+    console.error('Database connection error:', error.message);
     process.exit(1);
   }
 };
+
+module.exports = connectDB;
