@@ -1,8 +1,10 @@
-import { getCoordinates, getAirQuality, getHistoricalAirQuality } from "../services/airQualityService.js";
-import AQIPredictor from "../services/aqiPredictor.js";
+const { getCoordinates, getAirQuality, getHistoricalAirQuality } = require("../services/airQualityService.js");
+const AQIPredictor = require("../services/aqiPredictor.js");
 
-
-export const fetchAirQuality = async (req, res) => {
+// @desc    Fetch current air quality for a city
+// @route   GET /api/air-quality
+// @access  Public
+const fetchAirQuality = async (req, res) => {
   try {
     const { city } = req.query;
     if (!city) {
@@ -33,12 +35,15 @@ export const fetchAirQuality = async (req, res) => {
       components: airQualityData.list[0].components,
     });
   } catch (error) {
+    console.error("Fetch air quality error:", error);
     res.status(500).json({ error: "Failed to fetch air quality" });
   }
 };
 
-// New: Historical Trends
-export const fetchHistoricalAirQuality = async (req, res) => {
+// @desc    Fetch historical air quality trends
+// @route   GET /api/air-quality/history
+// @access  Public
+const fetchHistoricalAirQuality = async (req, res) => {
   try {
     const { city, days } = req.query;
     if (!city) {
@@ -74,6 +79,7 @@ export const fetchHistoricalAirQuality = async (req, res) => {
       trends,
     });
   } catch (error) {
+    console.error("Fetch historical air quality error:", error);
     res.status(500).json({ error: "Failed to fetch historical air quality" });
   }
 };
@@ -81,33 +87,40 @@ export const fetchHistoricalAirQuality = async (req, res) => {
 // Create predictor instance
 const predictor = new AQIPredictor();
 
-export const predictAirQuality = async (req, res) => {
-    try {
-        const { city = 'Colombo', days = 5 } = req.query;
+// @desc    Predict future AQI levels
+// @route   GET /api/air-quality/predict
+// @access  Public
+const predictAirQuality = async (req, res) => {
+  try {
+    const { city = "Colombo", days = 5 } = req.query;
 
-        if (!city) {
-            return res.status(400).json({
-                success: false,
-                error: 'City parameter is required'
-            });
-        }
-
-        console.log(`Making prediction for city: ${city}, days: ${days}`);
-
-        const predictionData = await predictor.getPredictions(city, parseInt(days));
-
-        res.json({
-            success: true,
-            data: predictionData,
-            message: 'AQI predictions generated successfully'
-        });
-
-    } catch (error) {
-        console.error('Prediction API error:', error);
-        res.status(500).json({
-            success: false,
-            error: error.message || 'Failed to generate predictions'
-        });
+    if (!city) {
+      return res.status(400).json({
+        success: false,
+        error: "City parameter is required",
+      });
     }
 
+    console.log(`Making prediction for city: ${city}, days: ${days}`);
+
+    const predictionData = await predictor.getPredictions(city, parseInt(days));
+
+    res.json({
+      success: true,
+      data: predictionData,
+      message: "AQI predictions generated successfully",
+    });
+  } catch (error) {
+    console.error("Prediction API error:", error);
+    res.status(500).json({
+      success: false,
+      error: error.message || "Failed to generate predictions",
+    });
+  }
+};
+
+module.exports = {
+  fetchAirQuality,
+  fetchHistoricalAirQuality,
+  predictAirQuality,
 };

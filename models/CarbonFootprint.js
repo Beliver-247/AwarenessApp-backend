@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const CarbonFootprintSchema = new mongoose.Schema({
   userId: { type: String }, // Optional: for user-specific records
@@ -6,10 +6,10 @@ const CarbonFootprintSchema = new mongoose.Schema({
     carKm: Number,
     vanKm: Number,
     busKm: Number,
-    trainKm: Number
+    trainKm: Number,
   },
   electricity: {
-    kwh: Number
+    kwh: Number,
   },
   multipliers: {
     type: Object,
@@ -18,19 +18,20 @@ const CarbonFootprintSchema = new mongoose.Schema({
       vanKm: 0.25,
       busKm: 0.1,
       trainKm: 0.05,
-      kwh: 0.5
-    }
+      kwh: 0.5,
+    },
   },
   total: { type: Number, required: true },
-  level: { type: String, enum: ['low', 'middle', 'high'], required: true },
-  createdAt: { type: Date, default: Date.now }
+  level: { type: String, enum: ["low", "middle", "high"], required: true },
+  createdAt: { type: Date, default: Date.now },
 });
 
-// ✅ Use export default for ESM
 // Use a custom collection name for carbon footprint records
-const CarbonFootprint = mongoose.model("CarbonFootprint", CarbonFootprintSchema, "carbon_footprint_records");
+const CarbonFootprint = mongoose.model(
+  "CarbonFootprint",
+  CarbonFootprintSchema,
+  "carbon_footprint_records"
+);
 
-export default CarbonFootprint;
-
-// Export the schema as well for advanced usage/testing
-export { CarbonFootprintSchema };
+module.exports = CarbonFootprint;
+module.exports.CarbonFootprintSchema = CarbonFootprintSchema;

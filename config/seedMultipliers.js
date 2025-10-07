@@ -1,7 +1,7 @@
 // Seed default multipliers for carbon footprint calculation
-import mongoose from "mongoose";
-import dotenv from "dotenv";
-import Multiplier from "../models/Multiplier.js";
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+const Multiplier = require("../models/Multiplier.js");
 
 dotenv.config();
 
@@ -12,16 +12,25 @@ const defaultMultipliers = [
   { key: "vanKm", value: 0.25 },
   { key: "busKm", value: 0.1 },
   { key: "trainKm", value: 0.05 },
-  { key: "kwh", value: 0.5 }
+  { key: "kwh", value: 0.5 },
 ];
 
 async function seedMultipliers() {
-  await mongoose.connect(MONGODB_URI);
-  for (const m of defaultMultipliers) {
-    await Multiplier.updateOne({ key: m.key }, { $set: m }, { upsert: true });
+  try {
+    await mongoose.connect(MONGODB_URI);
+    console.log("✅ Connected to MongoDB");
+
+    for (const m of defaultMultipliers) {
+      await Multiplier.updateOne({ key: m.key }, { $set: m }, { upsert: true });
+    }
+
+    console.log("🌱 Multipliers seeded successfully.");
+  } catch (error) {
+    console.error("❌ Error seeding multipliers:", error);
+  } finally {
+    await mongoose.disconnect();
+    console.log("🔌 Disconnected from MongoDB");
   }
-  console.log("Multipliers seeded.");
-  await mongoose.disconnect();
 }
 
 seedMultipliers();
