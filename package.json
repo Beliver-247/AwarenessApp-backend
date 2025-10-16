@@ -22,11 +22,15 @@
   "dependencies": {
     "@tensorflow/tfjs": "^4.22.0",
     "axios": "^1.11.0",
+    "compromise": "^14.14.4",
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "mongoose": "^8.18.2",
-    "nodemon": "^3.1.10"
+    "natural": "^8.1.0",
+    "node-fetch": "^3.3.2",
+    "nodemon": "^3.1.10",
+    "stopword": "^3.1.5"
   },
   "description": ""
 }
