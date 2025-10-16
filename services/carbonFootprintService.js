@@ -3,7 +3,7 @@ import Multiplier from '../models/Multiplier.js';
 export function calculateCarbonFootprint({ transportation, electricity, multipliers }) {
   let total = 0;
 
-  // Use provided multipliers or defaults
+
   const m = multipliers || {
     carKm: 0.21,
     vanKm: 0.25,
@@ -12,7 +12,7 @@ export function calculateCarbonFootprint({ transportation, electricity, multipli
     kwh: 0.5
   };
 
-  // Defensive: ensure keys exist and are numbers
+
   if (transportation && typeof transportation === 'object') {
     if (typeof transportation.carKm === 'number') total += transportation.carKm * m.carKm;
     if (typeof transportation.vanKm === 'number') total += transportation.vanKm * m.vanKm;
@@ -34,13 +34,13 @@ export function calculateCarbonFootprint({ transportation, electricity, multipli
 }
 
 export async function getMultipliersFromDB() {
-  // Fetch all multipliers from the DB and return as an object
+ 
   const docs = await Multiplier.find({});
   const multipliers = {};
   docs.forEach(doc => {
     multipliers[doc.key] = doc.value;
   });
-  // Fallback to defaults if not found
+
   return {
     carKm: multipliers.carKm ?? 0.21,
     vanKm: multipliers.vanKm ?? 0.25,

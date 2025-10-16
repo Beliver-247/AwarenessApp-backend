@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors"; // Import cors
 import airQualityRoutes from "./Routes/airQualityRoutes.js";
 import carbonFootprintRoutes from "./Routes/carbonFootprintRoutes.js";
-import NewsRoutes from "./news/index.js";
+import newsRoutes from "./Routes/newsRoutes.js";
 import quizRoutes from "./Routes/quizRoutes.js";
 import dotenv from "dotenv";
 import { connectDB } from "./config/db.js";
@@ -31,7 +31,7 @@ app.use((req, res, next) => {
 // Routes
 app.use("/api/air-quality", airQualityRoutes);
 app.use("/api/carbon-footprint", carbonFootprintRoutes);
-app.use("/api/news", NewsRoutes);
+app.use("/api/news", newsRoutes);
 app.use("/api/quiz", quizRoutes);
 
 console.log('Routes registered:');

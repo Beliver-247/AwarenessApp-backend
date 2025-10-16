@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const CarbonFootprintSchema = new mongoose.Schema({
-  userId: { type: String }, // Optional: for user-specific records
+  userId: { type: String }, 
   transportation: {
     carKm: Number,
     vanKm: Number,
@@ -26,11 +26,10 @@ const CarbonFootprintSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-// ✅ Use export default for ESM
-// Use a custom collection name for carbon footprint records
+
 const CarbonFootprint = mongoose.model("CarbonFootprint", CarbonFootprintSchema, "carbon_footprint_records");
 
 export default CarbonFootprint;
 
-// Export the schema as well for advanced usage/testing
+
 export { CarbonFootprintSchema };

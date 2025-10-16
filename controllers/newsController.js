@@ -4,14 +4,14 @@ import NewsSummarizationService from '../services/newsSummarizationService.js';
 const NEWS_API_URL = process.env.NEWS_API_URL;
 const NEWS_API_KEY = process.env.NEWS_API_KEY;
 
-// Initialize the NLP summarization service
+
 const summarizationService = new NewsSummarizationService();
 
 const getClimateNews = async (req, res) => {
   try {
     const { from, to, sortBy = 'popularity' } = req.query;
     
-    console.log('🔍 Fetching climate news...');
+    console.log('Fetching climate news...');
     
     // Always use 'climate' as the query
     const response = await axios.get(NEWS_API_URL, {
@@ -19,10 +19,10 @@ const getClimateNews = async (req, res) => {
     });
     
     const articles = response.data.articles || [];
-    console.log(`📰 Found ${articles.length} articles`);
+    console.log(`Found ${articles.length} articles`);
     
     // Use advanced NLP summarization
-    console.log('🧠 Using advanced NLP summarization...');
+    console.log('Using advanced NLP summarization...');
     const summarizedArticles = await summarizationService.summarizeMultipleArticles(articles);
     
     // Add metadata about summarization
@@ -36,11 +36,11 @@ const getClimateNews = async (req, res) => {
       }
     };
     
-    console.log('✅ News summarization completed');
+    console.log('News summarization completed');
     res.json(responseData);
     
   } catch (err) {
-    console.error('❌ Error in getClimateNews:', err);
+    console.error('Error in getClimateNews:', err);
     res.status(500).json({ 
       error: 'Failed to fetch news', 
       details: err.message,
@@ -61,7 +61,7 @@ const summarizeText = async (req, res) => {
       });
     }
     
-    console.log('🔍 Summarizing custom text...');
+    console.log('Summarizing custom text...');
     
     const summary = await summarizationService.summarizeText(text, parseInt(maxSentences));
     
@@ -77,11 +77,11 @@ const summarizeText = async (req, res) => {
       }
     };
     
-    console.log('✅ Text summarization completed');
+    console.log('Text summarization completed');
     res.json(responseData);
     
   } catch (err) {
-    console.error('❌ Error in summarizeText:', err);
+    console.error('Error in summarizeText:', err);
     res.status(500).json({
       error: 'Failed to summarize text',
       details: err.message,
@@ -95,14 +95,14 @@ const analyzeEnvironmentalNews = async (req, res) => {
   try {
     const { query = 'environment sustainability climate', maxArticles = 10 } = req.query;
     
-    console.log('🌍 Analyzing environmental news...');
+    console.log('Analyzing environmental news...');
     
     const response = await axios.get(NEWS_API_URL, {
       params: { q: query, pageSize: maxArticles, apiKey: NEWS_API_KEY },
     });
     
     const articles = response.data.articles || [];
-    console.log(`📰 Found ${articles.length} articles for analysis`);
+    console.log(`Found ${articles.length} articles for analysis`);
     
     // Analyze articles with advanced NLP
     const analyzedArticles = await summarizationService.summarizeMultipleArticles(articles);
@@ -125,14 +125,14 @@ const analyzeEnvironmentalNews = async (req, res) => {
       timestamp: new Date().toISOString()
     };
     
-    console.log('✅ Environmental news analysis completed');
+    console.log('Environmental news analysis completed');
     res.json({
       articles: analyzedArticles,
       analysis: analysis
     });
     
   } catch (err) {
-    console.error('❌ Error in analyzeEnvironmentalNews:', err);
+    console.error('Error in analyzeEnvironmentalNews:', err);
     res.status(500).json({
       error: 'Failed to analyze environmental news',
       details: err.message,
